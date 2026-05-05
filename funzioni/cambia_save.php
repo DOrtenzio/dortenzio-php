@@ -1,7 +1,7 @@
 <?php
 if(session_status()!==PHP_SESSION_ACTIVE) session_start();
 require_once("operazioni.php");
-if(!require("auth.php")) header("Location: login.php");
+if(!require("auth.php")) header("Location: ../login.php");
 
 if(isset($_POST["id_membro"]) && !empty($_POST["id_membro"]) && isset($_POST["id_corso"]) && !empty($_POST["id_corso"])){
     try{

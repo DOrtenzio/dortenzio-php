@@ -39,7 +39,8 @@ if(!isset($_POST["id_istruttore"]) || empty($_POST["id_istruttore"])) header("Lo
                 }
             ?>
         </select>
-        
+        <input type="date" name="data_iscr" required>
+        <input type="time" name="orario" required>
         <input type="submit" name="Aggiungi" value="Aggiungi">
     </form>
 </body>
