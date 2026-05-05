@@ -11,7 +11,9 @@ require("funzioni/auth.php");
 </head>
 <body>
     <form action="funzioni/login.php" method="post">
-        
+        <input type="text" name="username" required>
+        <input type="password" name="psw" required>
+        <input type="submit" name="Accedi" value="Accedi">
     </form>
 </body>
 </html>

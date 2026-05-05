@@ -17,7 +17,6 @@ class Operazioni{
 
     function query($table,$where=[],$groupBy=[],$having=[],$orderBy=[],$select=['*']){
         if(!in_array($table, $this->whitelist)) throw new Exception("Tabella non trovata");
-        
         $valori = [];
         $sql = "SELECT ".implode(",", array_map(fn($c) => $c=='*' ? '*' : "`$c`", $select))." FROM `$table`";
     
@@ -30,11 +29,7 @@ class Operazioni{
             }
             $sql .= implode(" AND ", $condizioni_where);
         }
-    
-        // GROUP BY
         if(!empty($groupBy)) $sql=$sql." GROUP BY ".implode(",", array_map(fn($c) => "`$c`", $groupBy));
-    
-        // HAVING
         if(!empty($having)) {
             $sql=$sql." HAVING ";
             $condizioni_having=[];
@@ -44,8 +39,6 @@ class Operazioni{
             }
             $sql .= implode(" AND ", $condizioni_having);
         }
-    
-        // ORDER BY
         if(!empty($orderBy)) {
             $orders=[];
             foreach($orderBy as $k => $dir) {
@@ -54,12 +47,10 @@ class Operazioni{
             }
             $sql=$sql." ORDER BY " . implode(",", $orders);
         }
-    
         $sql=$sql.";";
     
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($valori);
-    
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

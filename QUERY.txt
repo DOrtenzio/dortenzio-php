@@ -1,0 +1,2 @@
+SELECT id_corso FROM iscrizioni_corsi
+
