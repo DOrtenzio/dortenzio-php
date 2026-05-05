@@ -53,4 +53,37 @@ class Operazioni{
         $stmt->execute($valori);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    function insert($table,$arr_att_val){
+        if(!in_array($table,$this->whitelist)) throw new Exception("Tabella non trovata");
+        if(!is_array($arr_att_val)) throw new Exception("Errore nei valori passati");
+
+        $valori=[];
+        foreach($arr_att_val as $chiave => $valore) $valori[":$chiave"]=$valore;
+
+        $stmt=$this->conn->prepare("INSERT INTO `$table`(".implode(",", array_map(fn($k) => "`$k`", array_keys($arr_att_val))).") VALUES (".implode(",",array_keys($valori)).")");
+        $stmt->execute($valori);
+        return $this->conn->lastInsertId();
+    }
+
+    function update($table,$arr_att_val,$arr_id_val){
+        if(!in_array($table,$this->whitelist)) throw new Exception("Tabella non trovata");
+        if(!is_array($arr_att_val)) throw new Exception("Errore nei valori passati");
+        if(!is_array($arr_id_val)) throw new Exception("Errore nei id passati");
+
+        $valori = [];
+        foreach($arr_att_val as $k => $v) $valori[":v_$k"] = $v;
+
+        $condizioni=[];
+        foreach($arr_id_val as $k => $v) {
+            $condizioni[]="`$k`=:w_$k";
+            $valori[":w_$k"]=$v;
+        }
+
+        $sql = "UPDATE `$table` SET " . implode(", ", array_map(fn($k) => "`$k` = :v_$k", array_keys($arr_att_val))) . " WHERE ".implode(" AND ",$condizioni);
+
+        $stmt=$this->conn->prepare($sql);
+        $stmt->execute($valori);
+        return;
+    }
 }

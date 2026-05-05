@@ -10,6 +10,7 @@ require("funzioni/auth.php");
     <title>Login</title>
 </head>
 <body>
+    <p>Accedi</p>
     <form action="funzioni/login.php" method="post">
         <input type="text" name="username" required>
         <input type="password" name="psw" required>

@@ -12,22 +12,48 @@ if(!require("funzioni/auth.php")) header("Location: login.php");
 </head>
 <body>
     <div>
-        <a href="funzioni/add_iscritto.php">Aggiunbgi Iscrizione A Corso</a>
+        <form action="funzioni/add_iscritto.php"  method="post">
+            <select name="id_istruttore" id="id_istruttore" required>
+                <?php
+                    try{
+                        $conn=new Operazioni();
+                        foreach($conn->query("istruttori") as $istr) {
+                            echo '<option value="'.$istr["id_istruttore"].'">'.$istr["cognome"].'</option>';
+                        }
+                    }catch(Exception $e){
+                        header("Location: errorpage.html");
+                    }
+                ?>
+            </select>
+            <input type="submit" name="Aggiungi" value="Aggiungi">
+        </form>
     </div>
 
     <div>
         <p>Corsi</p>
         <?php
+            try{
                 $conn=new Operazioni();
                 $corsi=[];
                 foreach($conn->query("corsi") as $corso) $corsi[$corso["id_corso"]]=$corso;
                 $membri=[];
                 foreach($conn->query("membri") as $membro) $membri[$membro["id_membro"]]=$membro;
                 foreach($corsi as $corso){
-                    echo "<p>".$corso[$iscritto["id_membro"]]["nome"];
+                    echo "<p> CORSO: ".$corsi[$corso["id_corso"]]["nome_corso"]." </p>";
                     $iscritti=$conn->query("iscrizioni_corsi",["id_corso"=>$corso["id_corso"]]);
-                    foreach($iscritti as $iscritto) echo "<p>".$membri[$iscritto["id_membro"]]["nome"]." - ".$membri[$iscritto["id_membro"]]["cognome"]."</p>";
+                    foreach($iscritti as $iscritto){
+                        echo "<div>";
+                        echo "<p>".$membri[$iscritto["id_membro"]]["nome"]." - ".$membri[$iscritto["id_membro"]]["cognome"]."</p>";
+                        echo '<form action="funzioni/cambia_corso.php" method="post">
+                                    <input type="hidden" name="id_membro" value="'.$iscritto["id_membro"].'">
+                                    <input type="submit" name="Cambia Corso" value="Cambia Corso">
+                              </form>';
+                        echo "</div>";
+                    } 
                 }
+            }catch(Exception $e){
+                header("Location: errorpage.html");
+            }
             ?>
     </div>
 
