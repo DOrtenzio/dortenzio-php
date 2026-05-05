@@ -102,36 +102,23 @@ if(!require("funzioni/auth.php")) header("Location: login.php");
                 /*
                     SELECT c.nome_corso as nome_c, m.nome as nome_m, m.cognome as cognome_m
                     FROM istruttori i,iscrizioni_corsi ic,corsi c,membri m
-                    WHERE i.id_istruttore=ic.id_istruttore AND c.id_corso=ic.id_corso AND m.id_membro=ic.id_membro
+                    WHERE i.id_istruttore=ic.id_istruttore AND c.id_corso=ic.id_corso AND m.id_membro=ic.id_membro AND c.id_istruttore=
                     ORDER BY i.cognome,c.nome_corso
                 */
-                $conn=new Operazioni();
-                $stmt = $this->conn->prepare("SELECT id_corso,count(*) AS totiscritti  FROM `iscrizioni_corsi` GROUP BY id_corso HAVING COUNT(*)>5");
-                $stmt->execute($valori);
-                $corsi=$stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 $istruttori=[];
                 foreach($conn->query("istruttori") as $i) $istruttori[$i["id_istruttore"]]=$i;
-                $corsi=[];
-                foreach($conn->query("corsi") as $corso) $corsi[$corso["id_corso"]]=$corso;
 
                 foreach($istruttori as $i){
                     echo "<p> ISTRUTTORE: ".$i["cognome"]." </p>";
-                    $corsomax="";
-                    $max=0;
-
-                    foreach($corsi_iscrizioni as $c){
-                       if($max<$c["totiscritti"]){
-                            $max=$c["totiscritti"];
-                            $corsomax=$c["id_corso"];
-                       }
-                    } 
-
-                    if($max!==0){
-                        echo "<div>";
-                        echo "<p>".$corsi[$corsomax]["nome"]." - ".$max."</p>";
-                        echo "</div>";
-                    }else echo "Nessun corso";
+                    $sql='SELECT c.nome_corso as nome_c, m.nome as nome_m, m.cognome as cognome_m
+                    FROM istruttori i,iscrizioni_corsi ic,corsi c,membri m
+                    WHERE i.id_istruttore=ic.id_istruttore AND c.id_corso=ic.id_corso AND m.id_membro=ic.id_membro AND c.id_istruttore='.$i["id_istruttore"].'
+                    ORDER BY i.cognome,c.nome_corso';
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->execute($valori);
+                    $c=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach($c as $cr) print_r($cr);
                 }
             }catch(Exception $e){
                 header("Location: errorpage.html");
