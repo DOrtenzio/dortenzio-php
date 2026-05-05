@@ -75,15 +75,19 @@ if(!require("funzioni/auth.php")) header("Location: login.php");
                     echo "<p> ISTRUTTORE: ".$i["cognome"]." </p>";
                     $corsomax="";
                     $max=0;
-                    foreach($iscritti as $iscritto){
-                        echo "<div>";
-                        echo "<p>".$membri[$iscritto["id_membro"]]["nome"]." - ".$membri[$iscritto["id_membro"]]["cognome"]."</p>";
-                        echo '<form action="funzioni/cambia_corso.php" method="post">
-                                    <input type="hidden" name="id_membro" value="'.$iscritto["id_membro"].'">
-                                    <input type="submit" name="Cambia Corso" value="Cambia Corso">
-                              </form>';
-                        echo "</div>";
+
+                    foreach($corsi_iscrizioni as $c){
+                       if($max<$c["totiscritti"]){
+                            $max=$c["totiscritti"];
+                            $corsomax=$c["id_corso"];
+                       }
                     } 
+
+                    if($max!==0){
+                        echo "<div>";
+                        echo "<p>".$corsi[$corsomax]["nome"]." - ".$max."</p>";
+                        echo "</div>";
+                    }else echo "Nessun corso";
                 }
             }catch(Exception $e){
                 header("Location: errorpage.html");
@@ -93,19 +97,46 @@ if(!require("funzioni/auth.php")) header("Location: login.php");
 
     <div>
         <p>REPORT</p>
-        <table>
-            <tr>
-                <th>Istruttore</th>
-                <th>Corso Con Più Iscritti (almeno>5)</th>
-            </tr>
-            <?php
+        <?php
+            try{
+                /*
+                    SELECT c.nome_corso as nome_c, m.nome as nome_m, m.cognome as cognome_m
+                    FROM istruttori i,iscrizioni_corsi ic,corsi c,membri m
+                    WHERE i.id_istruttore=ic.id_istruttore AND c.id_corso=ic.id_corso AND m.id_membro=ic.id_membro
+                    ORDER BY i.cognome,c.nome_corso
+                */
                 $conn=new Operazioni();
-                $istruttori=$conn->query("istruttori");
-                foreach($conn->query("iscrizioni_corsi",[],[]) as $iscrizione){
+                $stmt = $this->conn->prepare("SELECT id_corso,count(*) AS totiscritti  FROM `iscrizioni_corsi` GROUP BY id_corso HAVING COUNT(*)>5");
+                $stmt->execute($valori);
+                $corsi=$stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                $istruttori=[];
+                foreach($conn->query("istruttori") as $i) $istruttori[$i["id_istruttore"]]=$i;
+                $corsi=[];
+                foreach($conn->query("corsi") as $corso) $corsi[$corso["id_corso"]]=$corso;
+
+                foreach($istruttori as $i){
+                    echo "<p> ISTRUTTORE: ".$i["cognome"]." </p>";
+                    $corsomax="";
+                    $max=0;
+
+                    foreach($corsi_iscrizioni as $c){
+                       if($max<$c["totiscritti"]){
+                            $max=$c["totiscritti"];
+                            $corsomax=$c["id_corso"];
+                       }
+                    } 
+
+                    if($max!==0){
+                        echo "<div>";
+                        echo "<p>".$corsi[$corsomax]["nome"]." - ".$max."</p>";
+                        echo "</div>";
+                    }else echo "Nessun corso";
                 }
+            }catch(Exception $e){
+                header("Location: errorpage.html");
+            }
             ?>
-        </table>
     </div>
 </body>
 </html>
