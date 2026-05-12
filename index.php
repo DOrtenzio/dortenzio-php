@@ -98,7 +98,7 @@ if (!require("funzioni/auth.php")) {
             $sql = "SELECT i.id_istruttore, i.cognome, c.nome_corso, COUNT(ic.id_membro) AS totiscritti
                     FROM istruttori i JOIN corsi c ON i.id_istruttore = c.id_istruttore JOIN iscrizioni_corsi ic ON c.id_corso = ic.id_corso
                     GROUP BY i.id_istruttore, i.cognome, c.id_corso, c.nome_corso
-                    HAVING COUNT(ic.id_membro) > 1
+                    HAVING COUNT(ic.id_membro) > 5
                     AND COUNT(ic.id_membro) = (
                         SELECT COUNT(ic2.id_membro) as num_membri
                         FROM corsi c2 
