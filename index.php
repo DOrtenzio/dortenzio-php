@@ -96,9 +96,7 @@ if (!require("funzioni/auth.php")) {
         try {
             $conn = new Operazioni();
             $sql = "SELECT i.id_istruttore, i.cognome, c.nome_corso, COUNT(ic.id_membro) AS totiscritti
-                    FROM istruttori i 
-                    JOIN corsi c ON i.id_istruttore = c.id_istruttore 
-                    JOIN iscrizioni_corsi ic ON c.id_corso = ic.id_corso
+                    FROM istruttori i JOIN corsi c ON i.id_istruttore = c.id_istruttore JOIN iscrizioni_corsi ic ON c.id_corso = ic.id_corso
                     GROUP BY i.id_istruttore, i.cognome, c.id_corso, c.nome_corso
                     HAVING COUNT(ic.id_membro) > 1
                     AND COUNT(ic.id_membro) = (
@@ -146,9 +144,7 @@ if (!require("funzioni/auth.php")) {
                 echo "<p><strong>ISTRUTTORE: " . $i["cognome"] . "</strong></p>";
                 
                 $sql = 'SELECT c.nome_corso as nome_c, m.nome as nome_m, m.cognome as cognome_m
-                        FROM corsi c
-                        JOIN iscrizioni_corsi ic ON c.id_corso = ic.id_corso
-                        JOIN membri m ON m.id_membro = ic.id_membro
+                        FROM corsi c JOIN iscrizioni_corsi ic ON c.id_corso = ic.id_corso JOIN membri m ON m.id_membro = ic.id_membro
                         WHERE c.id_istruttore = :id_istruttore
                         ORDER BY c.nome_corso, m.cognome';
                 

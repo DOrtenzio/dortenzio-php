@@ -55,5 +55,6 @@ if (!require("auth.php")) {
         <input type="submit" name="Cambia" value="Cambia">
     </form>
     </div>
+    <a href="../index.php">Torna alla Home</a>
 </body>
 </html>

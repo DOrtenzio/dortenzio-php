@@ -69,5 +69,6 @@ if(!isset($_POST["id_istruttore"]) || empty($_POST["id_istruttore"])) header("Lo
             <input type="submit" name="Aggiungi" value="Aggiungi">
         </form>
     </div>
+    <a href="../index.php">Torna alla Home</a>
 </body>
 </html>
