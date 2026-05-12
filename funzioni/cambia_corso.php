@@ -14,7 +14,9 @@ if(!require("auth.php")) header("Location: ../login.php");
 <body>
     <p>Cambia Corso</p>
     <form action="funzioni/cambia_save.php" method="post">
-        <input type="text" name="id_membro" readonly>
+        <?php  
+            echo '<input type="text" name="id_membro" value="'.$_POST["id_membro"].'" readonly>';
+        ?>
         <select name="id_corso" id="id_corso" required>
             <?php
                 try{

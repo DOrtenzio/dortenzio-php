@@ -15,20 +15,23 @@ if(!isset($_POST["id_istruttore"]) || empty($_POST["id_istruttore"])) header("Lo
 <body>
     <p>Aggiungi Iscrizione</p>
     <form action="funzioni/add_save.php" method="post">
-    <select name="id_membro" id="id_membro" required>
-        <label for=""></label>
-        <input type="text" id="" name="nome_i" placeholder="Nome" required>
-            <?php
-                try{
-                    $conn=new Operazioni();
-                    foreach($conn->query("membri") as $m) {
-                        echo '<option value="'.$m["id_membro"].'">'.$m["cognome"].'</option>';
-                    }
-                }catch(Exception $e){
-                    header("Location: errorpage.html");
-                }
-            ?>
+        <p>NUOVO MEMBRO</p>
+        <label for="nome_i">Nome:</label>
+        <input type="text" id="nome_i" name="nome_i" placeholder="Nome" required>
+        <label for="cognome_i">Cognome:</label>
+        <input type="text" id="cognome_i" name="cognome_i" placeholder="Cognome" required>
+        <label for="data_i">Data di Nascita:</label>
+        <input type="date" id="data_i" name="data_i" required>
+        <label for="tipo_i">Tipo Abbonamento:</label>
+        <select name="tipo_i" id="tipo_i">
+            <option value="Mensile" selected>Mensile</option>
+            <option value="Trimestrale">Tri-Mensile</option>
+            <option value="Annuale">Annuale</option>
         </select>
+        <label for="pag_i">Già Pagato?</label>
+        <input type="checkbox" id="pag_i" name="pag_i">
+        <br>
+        <p>CORSO</p>
         <select name="id_corso" id="id_corso" required>
             <?php
                 try{
