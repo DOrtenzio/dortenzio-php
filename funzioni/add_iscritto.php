@@ -13,9 +13,11 @@ if(!isset($_POST["id_istruttore"]) || empty($_POST["id_istruttore"])) header("Lo
     <title>GYM</title>
 </head>
 <body>
-    <p>Aggiugni Iscrizione</p>
+    <p>Aggiungi Iscrizione</p>
     <form action="funzioni/add_save.php" method="post">
     <select name="id_membro" id="id_membro" required>
+        <label for=""></label>
+        <input type="text" id="" name="nome_i" placeholder="Nome" required>
             <?php
                 try{
                     $conn=new Operazioni();

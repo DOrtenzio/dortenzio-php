@@ -15,6 +15,8 @@ class Operazioni{
         }
     }
 
+    function getPDO():PDO{ return $this->conn; }
+
     function query($table,$where=[],$groupBy=[],$having=[],$orderBy=[],$select=['*']){
         if(!in_array($table, $this->whitelist)) throw new Exception("Tabella non trovata");
         $valori = [];
